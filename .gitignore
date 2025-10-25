@@ -1,0 +1,39 @@
+# Derleme klasörleri
+bin/
+obj/
+
+# Visual Studio klasörü
+.vs/
+
+# Kullanıcıya özel proje dosyaları
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Geçici dosyalar
+*.tmp
+*.log
+*.cache
+*.pdb
+
+# NuGet paketleri
+packages/
+*.nupkg
+
+# Yayın klasörleri
+PublishProfiles/
+TestResults/
+*.Publish.xml
+
+# OS tarafından oluşturulanlar
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Rider / ReSharper / diğer IDE dosyaları
+.idea/
+*.DotSettings.user
+
+# Ortam değişkeni dosyaları (varsa)
+.env
