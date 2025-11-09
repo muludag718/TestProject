@@ -44,40 +44,34 @@ public class P3D
         uint HeaderSize = input.ReadValueU32();
         var LengthData = input.ReadValueU32();
 
-        IBaseParse? baseParse = GetIParse(type);
+        IChunkData? chunkData = GetIParse(type, input);
 
-        if (baseParse != null)
+        if (chunkData != null)
         {
-
+            chunkData.Deserialize(input);
         }
         else
         {
-            baseParse = new UnknowFile(type)
+            chunkData = new UnknowFile(type)
             {
                 StartPosition = (uint)position,
-                TotalSize = LengthData,
                 Data = input.ReadBytes((int)(LengthData - 12))
             };
 
         }
 
 
-
-
-
-
-
-        return new IChunkData();
+        return chunkData;
     }
-    private static IChunkData? GetIParse(uint DataID)
+    private static IChunkData? GetIParse(uint DataID, Stream input)
     {
-        switch (DataID)
+        return DataID switch
         {
-            case 4261412864: return new AudioFileHelper();
-            case 98818: return new TextBibleDataHeader();
-            case 98817: return new TextBibleData();
-            default: return null;
-        }
+            4261412864 => AudioFileHelper.GetChuckData(input),
+            98818 => new TextBibleDataHeader(),
+            98817 => new TextBibleData(),
+            _ => null,
+        };
     }
     private Stream? FileController(string filePath)
     {

@@ -6,7 +6,6 @@ public abstract class IChunkData
 {
     public abstract string Name { get; }
     public object? Data { get; set; }
-    public Type? DataType { get; set; }
 
     public virtual uint TypeId { get; }
     public uint? HeaderSize { get; set; }
@@ -18,7 +17,6 @@ public abstract class IChunkData
     public void SetData<T>(T Data)
     {
         this.Data = Data;
-        DataType = Data?.GetType();
     }
     public abstract void Deserialize(Stream input);
 }

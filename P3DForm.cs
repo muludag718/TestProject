@@ -17,7 +17,7 @@ namespace ProtoType2.Tools.UI
 
         private readonly HashDatabaseHelper HashDatabase;
 
-        private ConcurrentBag<IBaseParse> allSections = [];
+        private ConcurrentBag<IChunkData> allSections = [];
 
         private ConcurrentQueue<string> logQueue = [];
 
@@ -136,8 +136,9 @@ namespace ProtoType2.Tools.UI
             {
                 try
                 {
-                    var parser = new P3DParser(file);
-                    var sections = parser.Deserialize();
+                    var parser = new P3D();
+                    parser.Deserialize(file);
+                    var sections = parser.Chunks;
                     LogWrite($"{file}-->");
                     string? wavPath = null;
                     foreach (var section in sections)
@@ -147,7 +148,7 @@ namespace ProtoType2.Tools.UI
                         allSections.Add(section);
                     }
                     Log($" <--{sections.Count}");
-                    SaveHash(file, sections, wavPath);
+                    //SaveHash(file, sections, wavPath);
                 }
                 catch (Exception e)
                 {
@@ -207,7 +208,7 @@ namespace ProtoType2.Tools.UI
             if (samples.Count > 0)
                 samples.WriteToWavFile(wavPath, 48000);
         }
-        private void SaveHash(string filePath, List<IBaseParse> sections, string? outputPath)
+        private void SaveHash(string filePath, List<IChunkData> sections, string? outputPath)
         {
             var hash = FileHasher.CalculateHash_MD5(filePath);
             HashDatabase.SaveMetaToDatabase(filePath, new FileMetaData

@@ -20,3 +20,4 @@ C:\Users\Mulud\githubSource\TestProject\TestProject\obj\Debug\net8.0-windows\Tes
 C:\Users\Mulud\githubSource\TestProject\TestProject\obj\Debug\net8.0-windows\ref\TestProject.dll
 C:\Users\Mulud\githubSource\TestProject\TestProject\bin\Debug\net8.0-windows\Newtonsoft.Json.dll
 C:\Users\Mulud\githubSource\TestProject\TestProject\obj\Debug\net8.0-windows\ProtoType2.Tools.UI.P3DForm.resources
+C:\Users\Mulud\githubSource\TestProject\TestProject\obj\Debug\net8.0-windows\TestProject.sourcelink.json
