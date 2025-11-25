@@ -4,26 +4,38 @@ using TestProject.P3DFile.Models;
 
 namespace TestProject.P3DFile;
 
-public class P3D
+public class P3DFile
 {
+    #region Property 
     public string FilePath { get; set; } = string.Empty;
+    public Stream input { get; init; }
     public string FileName { get; set; } = string.Empty;
     public List<uint> TypeId { get; } = [];
 
     public const uint Magic = 4282659664;
 
     public const uint Header = 12;
-
-
     public uint FileSize { get; set; }
 
     public List<IChunkData> Chunks { get; } = [];
 
     public int ChunkLength => Chunks.Count;
 
-    public void Deserialize(string filePath)
+    #endregion
+
+    public P3DFile(string filePath)
     {
-        var input = FileController(filePath);
+        this.FilePath = filePath;
+        input = File.OpenRead(filePath);
+    }
+    //public P3DFile(Stream stream)
+    //{
+    //    input = stream;
+    //}
+
+    public void Deserialize()
+    {
+        var input = FileController();
         if (input == null)
         {
             return;
@@ -73,13 +85,10 @@ public class P3D
             _ => null,
         };
     }
-    private Stream? FileController(string filePath)
+    private Stream? FileController()
     {
         try
         {
-
-            using var input = File.OpenRead(filePath);
-
             var magic = input.ReadValueU32();
             if (magic != Magic)
             {
@@ -92,10 +101,9 @@ public class P3D
             }
             var fileTotalSize = input.ReadValueU32();
 
-            var fileName = Path.GetFileName(filePath);
+            var fileName = Path.GetFileName(FilePath);
 
 
-            FilePath = filePath;
             FileSize = fileTotalSize;
             FileName = fileName;
 

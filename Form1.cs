@@ -25,8 +25,8 @@ namespace TestProject
         void Parse()
         {
             if (p3DFile == null) return;
-            var p3d = new P3D();
-            p3d.Deserialize(p3DFile);
+            var p3d = new P3DFile.P3DFile(p3DFile);
+            p3d.Deserialize();
             var result = p3d.Chunks;
             treeView1.Nodes.Clear();
             createTreeViewNodes(result);

@@ -6,7 +6,7 @@ namespace TestProject.P3DFile.Models;
 
 public class AudioSubtitle : IChunkData
 {
-    public override string Name => "AudioDialogueSubtitle\0";
+    public override string Name => "AudioDialogueSubtitle";
 
     public override uint TypeId => 4261412864;
 

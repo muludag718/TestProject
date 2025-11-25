@@ -15,7 +15,6 @@ namespace ProtoType2.Tools.UI
     public partial class P3DForm : Form
     {
 
-        private readonly HashDatabaseHelper HashDatabase;
 
         private ConcurrentBag<IChunkData> allSections = [];
 
@@ -31,7 +30,6 @@ namespace ProtoType2.Tools.UI
         {
             InitializeComponent();
             InitLogger();
-            HashDatabase = new("Hash_Files.json");
         }
 
 
@@ -102,7 +100,6 @@ namespace ProtoType2.Tools.UI
         {
             //md5 hesaplama      //md5 karşilaştirması 
             string[] files = Directory.GetFiles(folderPath, "*.p3d", SearchOption.AllDirectories);
-            files = await HashProcess(files);
             try
             {
                 await ProcessP3D(files);
@@ -136,8 +133,8 @@ namespace ProtoType2.Tools.UI
             {
                 try
                 {
-                    var parser = new P3D();
-                    parser.Deserialize(file);
+                    var parser = new P3DFile(file);
+                    parser.Deserialize();
                     var sections = parser.Chunks;
                     LogWrite($"{file}-->");
                     string? wavPath = null;
@@ -208,18 +205,7 @@ namespace ProtoType2.Tools.UI
             if (samples.Count > 0)
                 samples.WriteToWavFile(wavPath, 48000);
         }
-        private void SaveHash(string filePath, List<IChunkData> sections, string? outputPath)
-        {
-            var hash = FileHasher.CalculateHash_MD5(filePath);
-            HashDatabase.SaveMetaToDatabase(filePath, new FileMetaData
-            {
-                Tag = Path.GetFileNameWithoutExtension(filePath),
-                Hash = hash,
-                Labels = [.. sections.Select((item) => item.ToString())],
-                OutputFile = outputPath ?? ""
-            });
-            HashDatabase.SaveChanges();
-        }
+
 
         private JsonSerializerOptions GetOptions()
         {
@@ -251,41 +237,6 @@ namespace ProtoType2.Tools.UI
         }
         #endregion
 
-        #region Hash Process
-        private async Task<string[]> HashProcess(string[] files)
-        {
-            #region MD File Hash
-            Log("Hash hesaplaması yapılıyor");
-            var hasher = await FileHasher.CalculateHash_MD5(files);
-            Log($"{files.Length} tane dosyanın hash hesaplaması yapıldı");
-            #endregion
-
-            #region Hash DataBase 
-            Log("Kayıt ve sorgu Başlatıldı");
-
-            var filesList = files.ToList();
-
-            int counter = 0;
-
-            foreach (var item in hasher)
-            {
-                var filename = HashDatabase.GetMetaDataByHash(item.Value);
-                if (filename != null && filename.Any(pair => pair.Key == item.Key))
-                {
-                    counter++;
-                    Log($"{item.Key} {item.Value} record found");
-                    filesList.Remove(item.Key);
-                }
-
-            }
-            return filesList.ToArray();
-
-            #endregion
-        }
-
-
-
-        #endregion
 
         #region Logger Process
 

@@ -7,7 +7,7 @@ namespace TestProject.P3DFile.Models;
 
 public class AudioRadp : IChunkData
 {
-    public override string Name => "AudioFile\0";
+    public override string Name => "AudioRadp";
     public string LabelKey { get; private set; } = string.Empty;
 
     public byte[] RawData { get; set; } = [];
